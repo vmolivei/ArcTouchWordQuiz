@@ -9,5 +9,5 @@
 import Foundation
 
 class Constants {
-    static let wordQuizFetchPath = "https://codechallenge.arctouch.com/quiz/2"
+    static let wordQuizFetchPath = "https://codechallenge.arctouch.com/quiz/1"
 }
