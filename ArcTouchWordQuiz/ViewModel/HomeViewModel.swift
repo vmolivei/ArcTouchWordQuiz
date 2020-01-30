@@ -48,10 +48,12 @@ class HomeViewModel: HomeViewModelType {
         self.logicController = logicController
     }
     
+    // MARK: - Data loading
+    
     func fetchData(completion: @escaping ((Error?) -> Void)) {
         communicator.fetchWordQuiz { [weak self] (quiz, error) in
             guard let self = self, let quiz = quiz, error == nil else {
-                completion(NSError())
+                completion(NSError(domain: "Unknown", code: 504, userInfo: nil))
                 return
             }
             
@@ -60,6 +62,7 @@ class HomeViewModel: HomeViewModelType {
             completion(nil)
         }
     }
+    
     // MARK: - Helpers
     
     func getTitle() -> String? {

@@ -24,6 +24,9 @@
 		845A907523E27DD400DC9D5A /* GameLogicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845A907423E27DD400DC9D5A /* GameLogicController.swift */; };
 		845D9C1723E32F2E00B3EF30 /* WordsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845D9C1523E32F2E00B3EF30 /* WordsTableViewCell.swift */; };
 		845D9C1823E32F2E00B3EF30 /* WordsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 845D9C1623E32F2E00B3EF30 /* WordsTableViewCell.xib */; };
+		845D9C1A23E3621F00B3EF30 /* WordQuizCommunicatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845D9C1923E3621F00B3EF30 /* WordQuizCommunicatorTests.swift */; };
+		845D9C1C23E369A700B3EF30 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845D9C1B23E369A700B3EF30 /* HomeViewModelTests.swift */; };
+		845D9C1E23E370ED00B3EF30 /* GameLogicControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845D9C1D23E370ED00B3EF30 /* GameLogicControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +70,9 @@
 		845A907423E27DD400DC9D5A /* GameLogicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogicController.swift; sourceTree = "<group>"; };
 		845D9C1523E32F2E00B3EF30 /* WordsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsTableViewCell.swift; sourceTree = "<group>"; };
 		845D9C1623E32F2E00B3EF30 /* WordsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WordsTableViewCell.xib; sourceTree = "<group>"; };
+		845D9C1923E3621F00B3EF30 /* WordQuizCommunicatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordQuizCommunicatorTests.swift; sourceTree = "<group>"; };
+		845D9C1B23E369A700B3EF30 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
+		845D9C1D23E370ED00B3EF30 /* GameLogicControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLogicControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +140,9 @@
 			children = (
 				845A904A23E1BEDC00DC9D5A /* ArcTouchWordQuizTests.swift */,
 				845A904C23E1BEDC00DC9D5A /* Info.plist */,
+				845D9C1923E3621F00B3EF30 /* WordQuizCommunicatorTests.swift */,
+				845D9C1B23E369A700B3EF30 /* HomeViewModelTests.swift */,
+				845D9C1D23E370ED00B3EF30 /* GameLogicControllerTests.swift */,
 			);
 			path = ArcTouchWordQuizTests;
 			sourceTree = "<group>";
@@ -329,7 +338,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845D9C1E23E370ED00B3EF30 /* GameLogicControllerTests.swift in Sources */,
 				845A904B23E1BEDC00DC9D5A /* ArcTouchWordQuizTests.swift in Sources */,
+				845D9C1A23E3621F00B3EF30 /* WordQuizCommunicatorTests.swift in Sources */,
+				845D9C1C23E369A700B3EF30 /* HomeViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,7 +545,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ArcTouchWordQuizTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -554,7 +566,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ArcTouchWordQuizTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

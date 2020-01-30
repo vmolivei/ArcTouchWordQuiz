@@ -47,23 +47,38 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange),
                                                name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
+
+    // MARK: - Load Data
 
     func loadData() {
         loadingIndicator.show(onView: self.view)
         
         viewModel.fetchData { (error) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.main.async() {
                 self.loadingIndicator.hide(fromView: self.view)
+                guard error == nil else {
+                    self.displayLoadError()
+                    return
+                }
+                
                 self.inputField.isHidden = false
                 self.resetGameUI()
             }
         }
     }
+    
+    func displayLoadError() {
+        let alertCtrl = UIAlertController(title: "Error", message: "An unknown error happened while loading the game", preferredStyle: .alert)
+        let alertAcion = UIAlertAction(title: "Retry", style: .default) { (_) in
+            alertCtrl.dismiss(animated: true, completion: nil)
+            self.loadData()
+        }
+        
+        alertCtrl.addAction(alertAcion)
+        present(alertCtrl, animated: true, completion: nil)
+    }
+    
+    // MARK: - UI Setup
     
     func setupTableView() {
         let nib = UINib(nibName: cellID, bundle: .main)
@@ -100,39 +115,6 @@ class HomeViewController: UIViewController {
         
     }
     
-    func animateInfoViewPosition(with value: CGFloat) {
-        UIView.animate(withDuration: 0.25) {
-            self.infoViewBottomConstraint.constant = value
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    @objc func keyboardWillChange(notification: NSNotification) {
-        guard notification.name == UIResponder.keyboardWillShowNotification else {
-            animateInfoViewPosition(with: 0)
-            return
-        }
-        
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            animateInfoViewPosition(with: keyboardSize.height * -1)
-        }
-    }
-    
-    // MARK: - IBAction
-    
-    @IBAction func didTapStart(_ sender: Any) {
-        guard gameStarted == false else {
-            viewModel.resetGame()
-            resetGameUI()
-            return
-        }
-        
-        gameStarted = true
-        viewModel.startGame()
-        startButton.setTitle("Reset", for: .normal)
-        inputField.isUserInteractionEnabled = true
-    }
-    
     func resetGameUI() {
         gameStarted = false
         
@@ -146,6 +128,38 @@ class HomeViewController: UIViewController {
         answerTableView.reloadData()
     }
     
+    func animateInfoViewPosition(with value: CGFloat) {
+        UIView.animate(withDuration: 0.25) {
+            self.infoViewBottomConstraint.constant = value
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    // MARK: - IBAction and Selectors
+    
+    @objc func keyboardWillChange(notification: NSNotification) {
+        guard notification.name == UIResponder.keyboardWillShowNotification else {
+            animateInfoViewPosition(with: 0)
+            return
+        }
+        
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            animateInfoViewPosition(with: keyboardSize.height * -1)
+        }
+    }
+    
+    @IBAction func didTapStart(_ sender: Any) {
+        guard gameStarted == false else {
+            viewModel.resetGame()
+            resetGameUI()
+            return
+        }
+        
+        gameStarted = true
+        viewModel.startGame()
+        startButton.setTitle("Reset", for: .normal)
+        inputField.isUserInteractionEnabled = true
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -189,6 +203,8 @@ extension HomeViewController: UITextFieldDelegate {
         }
     }
 }
+
+// MARK: - GameDelegate
 
 extension HomeViewController: GameDelegate {
     func gameCleared() {

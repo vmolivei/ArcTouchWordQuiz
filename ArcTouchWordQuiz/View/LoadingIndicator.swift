@@ -39,12 +39,11 @@ class LoadingIndicator: UIView {
     }
     
     func layoutView() {
-        contentView.backgroundColor = .none//UIColor(red: 0, green: 0, blue: 0, alpha: 0)
+        contentView.backgroundColor = .none
         loadingWrapperView.layer.cornerRadius = 16.0
         loadingWrapperView.clipsToBounds = true
         
         activityIndicatorView.color = .white
-//        activityIndicatorView.style = .medium @TODO
         activityIndicatorView.hidesWhenStopped = true
         
         titleLbl.tintColor = .white
