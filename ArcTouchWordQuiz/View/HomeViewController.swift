@@ -226,13 +226,16 @@ extension HomeViewController: GameDelegate {
     func showEndGameAlert(for title: String, with msg: String, actionTitle: String) {
         let alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         let alertAction = UIAlertAction(title: actionTitle, style: .default) { _ in
-            self.viewModel.resetGame()
-            self.resetGameUI()
-            alertCtrl.dismiss(animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self.viewModel.resetGame()
+                self.resetGameUI()
+                alertCtrl.dismiss(animated: true, completion: nil)
+            }
         }
         
         alertCtrl.addAction(alertAction)
-
+        
+        inputField.resignFirstResponder()
         present(alertCtrl, animated: true, completion: nil)
     }
     
