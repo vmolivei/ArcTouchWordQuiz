@@ -23,10 +23,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7gp-oy-dRQ">
-                        <rect key="frame" x="16" y="60" width="304" height="1"/>
+                        <rect key="frame" x="16" y="60.5" width="304" height="0.5"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="1" id="OxM-aX-5Yf"/>
+                            <constraint firstAttribute="height" constant="0.5" id="OxM-aX-5Yf"/>
                         </constraints>
                     </view>
                 </subviews>

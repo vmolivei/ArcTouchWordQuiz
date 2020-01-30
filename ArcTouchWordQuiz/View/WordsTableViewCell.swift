@@ -15,7 +15,7 @@ class WordsTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        separatorView.backgroundColor = .gray//.separator @TODO
+        separatorView.backgroundColor = .lightGray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

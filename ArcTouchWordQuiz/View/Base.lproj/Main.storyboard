@@ -46,16 +46,16 @@
                                         <rect key="frame" x="24" y="16" width="366" height="80"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q2W-MU-c0l">
-                                                <rect key="frame" x="0.0" y="0.0" width="366" height="28"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="366" height="24"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="ULJ-RP-U3W">
-                                                        <rect key="frame" x="0.0" y="-6.5" width="86.5" height="41"/>
+                                                        <rect key="frame" x="0.0" y="-8.5" width="86.5" height="41"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="hnj-H1-c4i">
-                                                        <rect key="frame" x="279.5" y="-6.5" width="86.5" height="41"/>
+                                                        <rect key="frame" x="279.5" y="-8.5" width="86.5" height="41"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -71,12 +71,12 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="022-e4-wVJ">
-                                                <rect key="frame" x="0.0" y="44" width="366" height="36"/>
+                                                <rect key="frame" x="0.0" y="40" width="366" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="36" id="OgZ-n8-rdl"/>
+                                                    <constraint firstAttribute="height" constant="40" id="OgZ-n8-rdl"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                                <state key="normal" title="Button"/>
+                                                <state key="normal" title="Start"/>
                                                 <connections>
                                                     <action selector="didTapStart:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TsC-fQ-bhB"/>
                                                 </connections>

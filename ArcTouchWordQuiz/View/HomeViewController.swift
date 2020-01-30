@@ -26,7 +26,7 @@ class HomeViewController: UIViewController {
     
     let cellID = "WordsTableViewCell"
     var loadingIndicator = LoadingIndicator()
-    var viewModel = HomeViewModel()
+    var viewModel: HomeViewModelType = HomeViewModel()
     var gameStarted = false
     
     // MARK: - View Life Cycle
@@ -50,18 +50,16 @@ class HomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        loadingIndicator.show(onView: self.view)
+        
     }
-    
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-//        setupInfoView()
-//    }
-    
+
     func loadData() {
+        loadingIndicator.show(onView: self.view)
+        
         viewModel.fetchData { (error) in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.loadingIndicator.hide(fromView: self.view)
+                self.inputField.isHidden = false
                 self.resetGameUI()
             }
         }
@@ -93,6 +91,13 @@ class HomeViewController: UIViewController {
         /// Shape
         startButton.clipsToBounds = true
         startButton.layer.cornerRadius = 8.0
+        
+        /// Values
+        titleLbl.text = nil
+        scoreLbl.text = nil
+        timeLbl.text = nil
+        inputField.isHidden = true
+        
     }
     
     func animateInfoViewPosition(with value: CGFloat) {
@@ -126,7 +131,6 @@ class HomeViewController: UIViewController {
         viewModel.startGame()
         startButton.setTitle("Reset", for: .normal)
         inputField.isUserInteractionEnabled = true
-        inputField.becomeFirstResponder()
     }
     
     func resetGameUI() {
@@ -188,7 +192,8 @@ extension HomeViewController: UITextFieldDelegate {
 
 extension HomeViewController: GameDelegate {
     func gameCleared() {
-        
+        let msg = "Good Job! You found all the answers on time. Keep up with the great work."
+        showEndGameAlert(for: "Congratulations", with: msg, actionTitle: "Play Again")
     }
     
     func updateTimeLbl(with value: String) {
@@ -197,7 +202,22 @@ extension HomeViewController: GameDelegate {
         }
     }
     
-    func timesUp() {
+    func timesUp(with score: Int, of maxScore: Int) {
+        let msg = "Sorry, time is up! You got \(score) out of \(maxScore) answers."
+        showEndGameAlert(for: "Time finished", with: msg, actionTitle: "Try Again")
+    }
+    
+    func showEndGameAlert(for title: String, with msg: String, actionTitle: String) {
+        let alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: actionTitle, style: .default) { _ in
+            self.viewModel.resetGame()
+            self.resetGameUI()
+            alertCtrl.dismiss(animated: true, completion: nil)
+        }
+        
+        alertCtrl.addAction(alertAction)
+
+        present(alertCtrl, animated: true, completion: nil)
     }
     
 }

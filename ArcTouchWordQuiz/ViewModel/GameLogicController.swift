@@ -10,11 +10,25 @@ import Foundation
 
 protocol GameDelegate: class {
     func updateTimeLbl(with value: String)
-    func timesUp()
+    func timesUp(with score: Int, of maxScore: Int)
     func gameCleared()
 }
 
-class GameLogicController {
+protocol GameLogicControllerType {
+    var timer: Timer { get set }
+    var duration: Int { get set }
+    var guessedWords: [String] { get set }
+    var wordQuiz: WordQuizType? { get set }
+    var delegate: GameDelegate? { get set }
+    var remainingWords: [String] { get set }
+    
+    func startTimer()
+    func getTimer() -> String
+    func checkGuessedWord(_ word: String) -> Bool
+}
+
+
+class GameLogicController: GameLogicControllerType {
     var duration = 300
     var timer = Timer()
     var wordQuiz: WordQuizType?
@@ -39,7 +53,9 @@ class GameLogicController {
     
     func timesUp() {
         timer.invalidate()
-        delegate?.timesUp()
+        if let ans = wordQuiz?.answer {
+            delegate?.timesUp(with: guessedWords.count, of: ans.count)
+        }
     }
     
     @objc func updatedTimer() {
@@ -63,11 +79,12 @@ class GameLogicController {
         return false
     }
     
-    func wordGuessed(_ word: String, at index: Int) {
+    private func wordGuessed(_ word: String, at index: Int) {
         guessedWords.append(word)
         remainingWords.remove(at: index)
         
         if remainingWords.isEmpty == true {
+            timer.invalidate()
             delegate?.gameCleared()
         }
     }

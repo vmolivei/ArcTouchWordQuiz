@@ -10,15 +10,29 @@ import Foundation
 
 protocol HomeViewModelType {
     var communicator: WordQuizCommunicatorType { get }
+    var logicController: GameLogicControllerType { get set }
+    var delegate: GameDelegate? { get set }
+    
+    //Data
     func fetchData(completion: @escaping ((Error?) -> Void))
+    
+    // Game Cycle
+    func checkWord(_ word: String) -> Bool
+    func startGame()
+    func resetGame()
+    
+    // UI Helpers
     func getTitle() -> String?
     func getScore() -> String?
-    func resetGame()
+    func getTimer() -> String?
+    func numberOfGuessedWords() -> Int
+    func guessedWord(for index: IndexPath) -> String?
 }
 
 class HomeViewModel: HomeViewModelType {
     let communicator: WordQuizCommunicatorType
-    let logicController: GameLogicController
+    var logicController: GameLogicControllerType
+    
     weak var delegate: GameDelegate? {
         set {
             logicController.delegate = newValue
@@ -29,14 +43,14 @@ class HomeViewModel: HomeViewModelType {
     }
     
     init(communicator: WordQuizCommunicatorType = WordQuizCommunicator.shared,
-         logicController: GameLogicController = .shared) {
+         logicController: GameLogicControllerType = GameLogicController.shared) {
         self.communicator = communicator
         self.logicController = logicController
     }
     
     func fetchData(completion: @escaping ((Error?) -> Void)) {
-        communicator.fetchWordQuiz { (quiz, error) in
-            guard let quiz = quiz, error == nil else {
+        communicator.fetchWordQuiz { [weak self] (quiz, error) in
+            guard let self = self, let quiz = quiz, error == nil else {
                 completion(NSError())
                 return
             }
