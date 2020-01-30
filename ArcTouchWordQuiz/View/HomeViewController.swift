@@ -20,45 +20,67 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var infoView: UIView!
     
-    @IBOutlet weak var infoViewBottomContraint: NSLayoutConstraint!
+    @IBOutlet weak var infoViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var infoViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var startButtonHeightConstraint: NSLayoutConstraint!
     
+    let cellID = "WordsTableViewCell"
     var loadingIndicator = LoadingIndicator()
-    var timerLogicCtrl = TimerLogicController()
+    var viewModel = HomeViewModel()
+    var gameStarted = false
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        WordQuizCommunicator().fetchWordQuiz { (wordQuiz, error) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.titleLbl.text = wordQuiz?.question
-                self.startButton.setTitle("Start", for: .normal)
-                self.loadingIndicator.hide(fromView: self.view)
-                self.timeLbl.text = self.timerLogicCtrl.getTimer()
-            }
-        }
-
+        viewModel.delegate = self
         inputField.delegate = self
-        answerTableView.delegate = self
-        answerTableView.dataSource = self
-        timerLogicCtrl.delegate = self
+        inputField.isUserInteractionEnabled = false
 
+        setupTableView()
         layoutViews()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+        loadData()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange),
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         loadingIndicator.show(onView: self.view)
     }
+    
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        super.viewWillTransition(to: size, with: coordinator)
+//        setupInfoView()
+//    }
+    
+    func loadData() {
+        viewModel.fetchData { (error) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.loadingIndicator.hide(fromView: self.view)
+                self.resetGameUI()
+            }
+        }
+    }
+    
+    func setupTableView() {
+        let nib = UINib(nibName: cellID, bundle: .main)
+        answerTableView.register(nib, forCellReuseIdentifier: cellID)
+        
+        answerTableView.delegate = self
+        answerTableView.dataSource = self
+        answerTableView.separatorStyle = .none
+    }
 
     func layoutViews() {
         /// Fonts
-        titleLbl.font = UIFont.boldSystemFont(ofSize: 34.0)
-        scoreLbl.font = UIFont.boldSystemFont(ofSize: 34.0)
-        timeLbl.font = UIFont.boldSystemFont(ofSize: 34.0)
+        titleLbl.font = UIFont.systemFont(ofSize: 34.0, weight: .bold)
+        scoreLbl.font = UIFont.systemFont(ofSize: 34.0, weight: .bold)
+        timeLbl.font = UIFont.systemFont(ofSize: 34.0, weight: .bold)
         inputField.font = UIFont.systemFont(ofSize: 17.0, weight: .regular)
         startButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .semibold)
         
@@ -75,12 +97,17 @@ class HomeViewController: UIViewController {
     
     func animateInfoViewPosition(with value: CGFloat) {
         UIView.animate(withDuration: 0.25) {
-            self.infoViewBottomContraint.constant = value
+            self.infoViewBottomConstraint.constant = value
             self.view.layoutIfNeeded()
         }
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillChange(notification: NSNotification) {
+        guard notification.name == UIResponder.keyboardWillShowNotification else {
+            animateInfoViewPosition(with: 0)
+            return
+        }
+        
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             animateInfoViewPosition(with: keyboardSize.height * -1)
         }
@@ -89,7 +116,30 @@ class HomeViewController: UIViewController {
     // MARK: - IBAction
     
     @IBAction func didTapStart(_ sender: Any) {
-        timerLogicCtrl.startTimer()
+        guard gameStarted == false else {
+            viewModel.resetGame()
+            resetGameUI()
+            return
+        }
+        
+        gameStarted = true
+        viewModel.startGame()
+        startButton.setTitle("Reset", for: .normal)
+        inputField.isUserInteractionEnabled = true
+        inputField.becomeFirstResponder()
+    }
+    
+    func resetGameUI() {
+        gameStarted = false
+        
+        inputField.text = nil
+        titleLbl.text = viewModel.getTitle()
+        timeLbl.text = viewModel.getTimer()
+        scoreLbl.text = viewModel.getScore()
+        
+        startButton.setTitle("Start", for: .normal)
+        inputField.isUserInteractionEnabled = false
+        answerTableView.reloadData()
     }
     
 }
@@ -98,14 +148,18 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return viewModel.numberOfGuessedWords()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel?.text = "Test"
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID) as? WordsTableViewCell
+        cell?.titleLbl?.text = viewModel.guessedWord(for: indexPath)
         
-        return cell
+        return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40.0
     }
 }
 
@@ -121,11 +175,22 @@ extension HomeViewController: UITextFieldDelegate {
     }
     
     @IBAction func textDidChange(_ sender: UITextField) {
-        print(sender.text)
+        guard let word = sender.text else { return }
+        if viewModel.checkWord(word) {
+            DispatchQueue.main.async {
+                self.inputField.text = nil
+                self.scoreLbl.text = self.viewModel.getScore()
+                self.answerTableView.reloadData()
+            }
+        }
     }
 }
 
-extension HomeViewController: TimerDelegate {
+extension HomeViewController: GameDelegate {
+    func gameCleared() {
+        
+    }
+    
     func updateTimeLbl(with value: String) {
         DispatchQueue.main.async {
             self.timeLbl.text = value

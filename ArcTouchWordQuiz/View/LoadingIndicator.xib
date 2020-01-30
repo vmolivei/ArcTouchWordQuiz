@@ -54,9 +54,9 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="WgR-TN-pRd" secondAttribute="bottom" id="8Wc-dv-rEO"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WgR-TN-pRd" secondAttribute="trailing" id="9Ci-ve-hfg"/>
+                <constraint firstAttribute="trailing" secondItem="WgR-TN-pRd" secondAttribute="trailing" id="9Ci-ve-hfg"/>
                 <constraint firstItem="5cX-uI-Ubs" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="AV2-sN-Mt5"/>
-                <constraint firstItem="WgR-TN-pRd" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Nu6-pX-HRg"/>
+                <constraint firstItem="WgR-TN-pRd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Nu6-pX-HRg"/>
                 <constraint firstItem="5cX-uI-Ubs" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="TAu-DQ-xbw"/>
                 <constraint firstItem="WgR-TN-pRd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="dZU-mA-3St"/>
             </constraints>

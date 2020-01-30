@@ -44,7 +44,7 @@ class LoadingIndicator: UIView {
         loadingWrapperView.clipsToBounds = true
         
         activityIndicatorView.color = .white
-        activityIndicatorView.style = .large
+//        activityIndicatorView.style = .medium @TODO
         activityIndicatorView.hidesWhenStopped = true
         
         titleLbl.tintColor = .white
@@ -73,13 +73,4 @@ class LoadingIndicator: UIView {
         self.removeFromSuperview()
         parent.layoutIfNeeded()
     }
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }

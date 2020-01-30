@@ -10,7 +10,6 @@ import Foundation
 
 protocol HomeViewModelType {
     var communicator: WordQuizCommunicatorType { get }
-    var wordQuiz: WordQuiz? { get set }
     func fetchData(completion: @escaping ((Error?) -> Void))
     func getTitle() -> String?
     func getScore() -> String?
@@ -19,34 +18,74 @@ protocol HomeViewModelType {
 
 class HomeViewModel: HomeViewModelType {
     let communicator: WordQuizCommunicatorType
-    var wordQuiz: WordQuiz?
-    var guessedWords: [String] = []
-    var timer = Timer()
+    let logicController: GameLogicController
+    weak var delegate: GameDelegate? {
+        set {
+            logicController.delegate = newValue
+        }
+        get{
+            return logicController.delegate
+        }
+    }
     
-    init(communicator: WordQuizCommunicatorType = WordQuizCommunicator.shared) {
+    init(communicator: WordQuizCommunicatorType = WordQuizCommunicator.shared,
+         logicController: GameLogicController = .shared) {
         self.communicator = communicator
+        self.logicController = logicController
     }
     
     func fetchData(completion: @escaping ((Error?) -> Void)) {
-        
+        communicator.fetchWordQuiz { (quiz, error) in
+            guard let quiz = quiz, error == nil else {
+                completion(NSError())
+                return
+            }
+            
+            self.logicController.wordQuiz = quiz
+            self.logicController.remainingWords = quiz.answer
+            completion(nil)
+        }
     }
+    // MARK: - Helpers
     
     func getTitle() -> String? {
-        return wordQuiz?.question
+        return logicController.wordQuiz?.question
     }
     
     func getScore() -> String? {
-        return "\(wordQuiz?.answer.count ?? 0)"
+        let guessedWords = logicController.guessedWords.count
+        let totalWords = logicController.wordQuiz?.answer.count ?? 0
+        return String(format: "%02i/%02i", guessedWords, totalWords)
+    }
+    
+    func getTimer() -> String? {
+        return logicController.getTimer()
     }
     
     func numberOfGuessedWords() -> Int {
-        return guessedWords.count
+        return logicController.guessedWords.count
     }
     
-    func guessedWord(for index: IndexPath) -> String {
-        return guessedWords[index.row]
+    func guessedWord(for index: IndexPath) -> String? {
+        guard index.row < logicController.guessedWords.count else { return nil }
+        return logicController.guessedWords[index.row]
+    }
+    
+    // MARK: - Game Cycle
+    
+    func checkWord(_ word: String) -> Bool {
+        return logicController.checkGuessedWord(word)
+    }
+    
+    func startGame() {
+        logicController.startTimer()
     }
     
     func resetGame() {
+        guard let answer = logicController.wordQuiz?.answer else { return }
+        logicController.duration = 300
+        logicController.guessedWords = []
+        logicController.remainingWords = answer
+        logicController.timer.invalidate()
     }
 }

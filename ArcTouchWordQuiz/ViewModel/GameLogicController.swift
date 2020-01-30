@@ -8,19 +8,26 @@
 
 import Foundation
 
-protocol TimerDelegate: class {
+protocol GameDelegate: class {
     func updateTimeLbl(with value: String)
     func timesUp()
+    func gameCleared()
 }
 
-class TimerLogicController {
-    weak var delegate: TimerDelegate?
+class GameLogicController {
     var duration = 300
     var timer = Timer()
+    var wordQuiz: WordQuizType?
+    var guessedWords: [String] = []
+    var remainingWords: [String] = []
+    weak var delegate: GameDelegate?
+    
+    static var shared = GameLogicController()
+    
+    // MARK: - Timer
     
     func startTimer() {
         timer.invalidate()
-        duration = 30
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updatedTimer), userInfo: nil, repeats: true)
     }
     
@@ -40,6 +47,28 @@ class TimerLogicController {
         delegate?.updateTimeLbl(with: getTimer())
         if duration == 0 {
             timesUp()
+        }
+    }
+    
+    // MARK: - Game Cylce
+    
+    func checkGuessedWord(_ word: String) -> Bool {
+        for it in 0..<remainingWords.count {
+            if remainingWords[it].lowercased() == word.lowercased() {
+                wordGuessed(remainingWords[it], at: it)
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    func wordGuessed(_ word: String, at index: Int) {
+        guessedWords.append(word)
+        remainingWords.remove(at: index)
+        
+        if remainingWords.isEmpty == true {
+            delegate?.gameCleared()
         }
     }
 }
