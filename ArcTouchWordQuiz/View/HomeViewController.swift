@@ -22,17 +22,21 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var infoViewBottomContraint: NSLayoutConstraint!
     
+    var loadingIndicator = LoadingIndicator()
+    
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         WordQuizCommunicator.shared.fetchWordQuiz { (wordQuiz, error) in
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.titleLbl.text = wordQuiz?.question
                 self.startButton.setTitle("Start", for: .normal)
+                self.loadingIndicator.hide(fromView: self.view)
             }
         }
-        
+
         inputField.delegate = self
         answerTableView.delegate = self
         answerTableView.dataSource = self
@@ -40,6 +44,11 @@ class HomeViewController: UIViewController {
         layoutViews()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadingIndicator.show(onView: self.view)
     }
 
     func layoutViews() {
@@ -74,9 +83,6 @@ class HomeViewController: UIViewController {
         }
     }
     
-    func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        return nil
-    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource

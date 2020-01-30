@@ -18,6 +18,8 @@
 		845A906923E1C14500DC9D5A /* WordQuizCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845A906823E1C14500DC9D5A /* WordQuizCommunicator.swift */; };
 		845A906B23E1C32900DC9D5A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845A906A23E1C32900DC9D5A /* Constants.swift */; };
 		845A906D23E1C56B00DC9D5A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845A906C23E1C56B00DC9D5A /* HomeViewController.swift */; };
+		845A906F23E25EE600DC9D5A /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845A906E23E25EE600DC9D5A /* LoadingIndicator.swift */; };
+		845A907123E25F0C00DC9D5A /* LoadingIndicator.xib in Resources */ = {isa = PBXBuildFile; fileRef = 845A907023E25F0C00DC9D5A /* LoadingIndicator.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		845A906823E1C14500DC9D5A /* WordQuizCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordQuizCommunicator.swift; sourceTree = "<group>"; };
 		845A906A23E1C32900DC9D5A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		845A906C23E1C56B00DC9D5A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		845A906E23E25EE600DC9D5A /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
+		845A907023E25F0C00DC9D5A /* LoadingIndicator.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicator.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +144,8 @@
 			children = (
 				845A903923E1BEDA00DC9D5A /* Main.storyboard */,
 				845A906C23E1C56B00DC9D5A /* HomeViewController.swift */,
+				845A906E23E25EE600DC9D5A /* LoadingIndicator.swift */,
+				845A907023E25F0C00DC9D5A /* LoadingIndicator.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -265,6 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845A907123E25F0C00DC9D5A /* LoadingIndicator.xib in Resources */,
 				845A904023E1BEDC00DC9D5A /* LaunchScreen.storyboard in Resources */,
 				845A903D23E1BEDC00DC9D5A /* Assets.xcassets in Resources */,
 				845A903B23E1BEDA00DC9D5A /* Main.storyboard in Resources */,
@@ -295,6 +302,7 @@
 				845A903423E1BEDA00DC9D5A /* AppDelegate.swift in Sources */,
 				845A906723E1C09700DC9D5A /* WordQuiz.swift in Sources */,
 				845A903623E1BEDA00DC9D5A /* SceneDelegate.swift in Sources */,
+				845A906F23E25EE600DC9D5A /* LoadingIndicator.swift in Sources */,
 				845A906923E1C14500DC9D5A /* WordQuizCommunicator.swift in Sources */,
 				845A906D23E1C56B00DC9D5A /* HomeViewController.swift in Sources */,
 				845A906B23E1C32900DC9D5A /* Constants.swift in Sources */,
