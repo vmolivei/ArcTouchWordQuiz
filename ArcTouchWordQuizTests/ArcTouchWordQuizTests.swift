@@ -12,6 +12,17 @@ import XCTest
 class ArcTouchWordQuizTests: XCTestCase {
 
     override func setUp() {
+        // attach that to some fixed data in our protocol handler
+        let url = URL(string: "https://codechallenge.arctouch.com/quiz/1")
+        URLProtocolMock.testURLs = [url: Data("Hacking with Swift!".utf8)]
+
+        // now set up a configuration to use our mock
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [URLProtocolMock.self]
+
+        // and create the URLSession from that
+        let session = URLSession(configuration: config)
+        print(session)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
@@ -31,4 +42,36 @@ class ArcTouchWordQuizTests: XCTestCase {
         }
     }
 
+}
+
+class URLProtocolMock: URLProtocol {
+    // this dictionary maps URLs to test data
+    static var testURLs = [URL?: Data]()
+
+    // say we want to handle all types of request
+    override class func canInit(with request: URLRequest) -> Bool {
+        return true
+    }
+
+    // ignore this method; just send back what we were given
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+
+    override func startLoading() {
+        // if we have a valid URL…
+        if let url = request.url {
+            // …and if we have test data for that URL…
+            if let data = URLProtocolMock.testURLs[url] {
+                // …load it immediately.
+                self.client?.urlProtocol(self, didLoad: data)
+            }
+        }
+
+        // mark that we've finished
+        self.client?.urlProtocolDidFinishLoading(self)
+    }
+
+    // this method is required but doesn't need to do anything
+    override func stopLoading() { }
 }

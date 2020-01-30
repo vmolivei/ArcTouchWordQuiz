@@ -23,23 +23,26 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var infoViewBottomContraint: NSLayoutConstraint!
     
     var loadingIndicator = LoadingIndicator()
+    var timerLogicCtrl = TimerLogicController()
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        WordQuizCommunicator.shared.fetchWordQuiz { (wordQuiz, error) in
+        WordQuizCommunicator().fetchWordQuiz { (wordQuiz, error) in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.titleLbl.text = wordQuiz?.question
                 self.startButton.setTitle("Start", for: .normal)
                 self.loadingIndicator.hide(fromView: self.view)
+                self.timeLbl.text = self.timerLogicCtrl.getTimer()
             }
         }
 
         inputField.delegate = self
         answerTableView.delegate = self
         answerTableView.dataSource = self
+        timerLogicCtrl.delegate = self
 
         layoutViews()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
@@ -83,6 +86,12 @@ class HomeViewController: UIViewController {
         }
     }
     
+    // MARK: - IBAction
+    
+    @IBAction func didTapStart(_ sender: Any) {
+        timerLogicCtrl.startTimer()
+    }
+    
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -114,4 +123,16 @@ extension HomeViewController: UITextFieldDelegate {
     @IBAction func textDidChange(_ sender: UITextField) {
         print(sender.text)
     }
+}
+
+extension HomeViewController: TimerDelegate {
+    func updateTimeLbl(with value: String) {
+        DispatchQueue.main.async {
+            self.timeLbl.text = value
+        }
+    }
+    
+    func timesUp() {
+    }
+    
 }

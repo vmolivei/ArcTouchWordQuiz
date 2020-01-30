@@ -11,3 +11,9 @@ import Foundation
 class Constants {
     static let wordQuizFetchPath = "https://codechallenge.arctouch.com/quiz/1"
 }
+
+enum WordQuizNetworkError {
+    case badURL(_ error: Error)
+    case badData(_ error: Error)
+    case decodingError(_ error: Error)
+}

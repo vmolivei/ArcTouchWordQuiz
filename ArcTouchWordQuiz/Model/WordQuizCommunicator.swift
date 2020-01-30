@@ -9,24 +9,30 @@
 import Foundation
 
 protocol  WordQuizCommunicatorType {
-    func fetchWordQuiz(completion: @escaping ((WordQuizType?, Error?) -> Void))
+    func fetchWordQuiz(completion: @escaping ((WordQuizType?, WordQuizNetworkError?) -> Void))
+    var urlSession: URLSession { get }
 }
 
 public class WordQuizCommunicator: WordQuizCommunicatorType {
+    let urlSession: URLSession
     static var shared = WordQuizCommunicator()
     
-    func fetchWordQuiz(completion: @escaping ((WordQuizType?, Error?) -> Void)) {
+    init(urlSession: URLSession = .shared) {
+        self.urlSession = urlSession
+    }
+    
+    func fetchWordQuiz(completion: @escaping ((WordQuizType?, WordQuizNetworkError?) -> Void)) {
     
         guard let url = URL(string: Constants.wordQuizFetchPath) else {
-            completion(nil, NSError())
+            completion(nil, .badURL(NSError()))
             return
         }
         
-        URLSession.shared.dataTask(with: url, completionHandler: {(data, res, err) in
+        urlSession.dataTask(with: url, completionHandler: {(data, res, err) in
             let decoder = JSONDecoder()
-
+            
             guard let data = data else {
-                completion(nil, err ?? NSError())
+                completion(nil, .badData(err ?? NSError()))
                 return
             }
             
@@ -34,9 +40,8 @@ public class WordQuizCommunicator: WordQuizCommunicatorType {
                 let decodedData = try decoder.decode(WordQuiz.self, from: data)
                 completion(decodedData, nil)
             } catch{
-                completion(nil, error)
+                completion(nil, .decodingError(error))
             }
         }).resume()
-        
     }
 }
