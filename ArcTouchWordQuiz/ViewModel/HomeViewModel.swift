@@ -100,9 +100,9 @@ class HomeViewModel: HomeViewModelType {
     
     func resetGame() {
         guard let answer = logicController.wordQuiz?.answer else { return }
-        logicController.duration = 30
+        logicController.duration = 300
         logicController.guessedWords = []
-        logicController.remainingWords = ["do", "let"]
+        logicController.remainingWords = answer
         logicController.timer.invalidate()
     }
 }
