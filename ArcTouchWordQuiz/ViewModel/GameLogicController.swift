@@ -41,8 +41,13 @@ class GameLogicController: GameLogicControllerType {
     // MARK: - Timer
     
     func startTimer() {
-        timer.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updatedTimer), userInfo: nil, repeats: true)
+        DispatchQueue.global(qos: .userInteractive).async {
+            let timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatedTimer), userInfo: nil, repeats: true)
+            let runLoop = RunLoop.current
+            runLoop.add(timer, forMode: RunLoop.Mode.default)
+            runLoop.run()
+        }
+        
     }
     
     func getTimer() -> String {
@@ -58,11 +63,14 @@ class GameLogicController: GameLogicControllerType {
         }
     }
     
-    @objc func updatedTimer() {
+    @objc public func updatedTimer() {
         duration  = duration - 1
-        delegate?.updateTimeLbl(with: getTimer())
-        if duration == 0 {
-            timesUp()
+        DispatchQueue.main.async {
+            
+            self.delegate?.updateTimeLbl(with: self.getTimer())
+            if self.duration == 0 {
+                self.timesUp()
+            }
         }
     }
     
